@@ -6,6 +6,7 @@
 package chat;
 
 import chat.server.ChatServer;
+import chat.client.ChatClient;
 import java.io.IOException;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -17,21 +18,29 @@ import java.util.logging.Logger;
  */
 public class Chat {
 
+    private static final String SERVER_ADDRESS = "127.0.0.1";
     private static final int SERVER_PORT = 5782;
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        // создаем сервер
         ChatServer chatServer = null;
         try {
             chatServer = new ChatServer(SERVER_PORT);
             Thread thread = new Thread(chatServer);
 
             thread.start();
+
         } catch (IOException ex) {
             Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
         }
+
+        // создаем клиента для сервера
+        ChatClient chatClient =  new ChatClient(SERVER_ADDRESS, SERVER_PORT);
+        Thread thread = new Thread(chatClient);
+        thread.start();
 
         if (chatServer != null) {
             try (Scanner scanner = new Scanner(System.in)) {
