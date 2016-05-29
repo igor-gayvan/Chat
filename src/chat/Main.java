@@ -16,10 +16,11 @@ import java.util.logging.Logger;
  *
  * @author Igor Gayvan
  */
-public class Chat {
+public class Main {
 
-    private static final String SERVER_ADDRESS = "127.0.0.1";
-    private static final int SERVER_PORT = 5782;
+    private static final String SERVER_ADDRESS = "192.168.1.99";
+    private static final int SERVER_PORT = 5781;
+    private static final int CLIENT_SERVER_PORT = 5782;
 
     /**
      * @param args the command line arguments
@@ -28,19 +29,14 @@ public class Chat {
         // создаем сервер
         ChatServer chatServer = null;
         try {
-            chatServer = new ChatServer(SERVER_PORT);
+            chatServer = new ChatServer(CLIENT_SERVER_PORT);
             Thread thread = new Thread(chatServer);
 
             thread.start();
 
         } catch (IOException ex) {
-            Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-        // создаем клиента для сервера
-        ChatClient chatClient =  new ChatClient(SERVER_ADDRESS, SERVER_PORT);
-        Thread thread = new Thread(chatClient);
-        thread.start();
 
         if (chatServer != null) {
             try (Scanner scanner = new Scanner(System.in)) {
@@ -48,6 +44,7 @@ public class Chat {
 
                 while (work) {
                     System.out.println("ACTIONS:");
+                    System.out.println("1. [S]end message");
                     System.out.println("0. [E]xit");
 
                     String input = scanner.nextLine();
@@ -58,6 +55,17 @@ public class Chat {
                             chatServer.stop();
                             work = false;
                             continue;
+                        case "1":
+                        case "s":
+                            System.out.print("Enter recepient address 192.168.1.");
+                            String recepient = "192.168.1.".concat(scanner.nextLine());
+                            System.out.print("Enter message: ");
+                            String message = scanner.nextLine();
+                            
+                            // создаем клиента для сервера
+                            ChatClient chatClient = new ChatClient(SERVER_ADDRESS, SERVER_PORT);
+                            chatClient.sendMessage(recepient, message);
+                            break;
                         default:
                             System.out.println("UNKNOWN ACTION");
                             break;

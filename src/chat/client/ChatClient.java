@@ -17,21 +17,19 @@ import java.util.logging.Logger;
  *
  * @author Igor Gayvan
  */
-public class ChatClient implements Runnable {
+public class ChatClient {
 
     private String serverAddress;
     private int serverPort;
 
-    private Socket socketClient;
-    private DataOutputStream dos;
-    private DataInputStream dis;
-
     public ChatClient(String serverAddress, int serverPort) {
         this.serverAddress = serverAddress;
         this.serverPort = serverPort;
+    }
 
-        try {
-            socketClient = new Socket();
+    public void sendMessage(String recepient, String message) {
+        try (Socket socketClient = new Socket()) {
+
             socketClient.setSoTimeout(1000);
             System.out.println("Connecting...");
 
@@ -39,26 +37,26 @@ public class ChatClient implements Runnable {
             socketClient.connect(isa);
             System.out.println("Connect establish");
 
-            dos = new DataOutputStream(socketClient.getOutputStream());
-            dis = new DataInputStream(socketClient.getInputStream());
-        } catch (IOException ex) {
-            Logger.getLogger(ChatClient.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
+            DataOutputStream dos = new DataOutputStream(socketClient.getOutputStream());
+            DataInputStream dis = new DataInputStream(socketClient.getInputStream());
 
-    @Override
-    public void run() {
-        try {
             dos.writeUTF("MSG");
-            dos.writeUTF("127.0.0.1"); ///*String.valueOf(socketClient.getLocalSocketAddress()*/));
-            dos.writeUTF("Hello");
+            dos.writeUTF(recepient);
+            dos.writeUTF(message);
 
             dos.flush();
 
             String response = dis.readUTF();
             System.out.println(response);
+
+            if ("OK".equals(response)) {
+                System.out.println("Message was send");
+            } else {
+                System.out.println("Error while sending message");
+            }
         } catch (IOException ex) {
             Logger.getLogger(ChatClient.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
 }
