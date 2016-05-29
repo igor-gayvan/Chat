@@ -50,7 +50,7 @@ public class ChatClient implements Runnable {
     public void run() {
         try {
             dos.writeUTF("MSG");
-            dos.writeUTF(String.valueOf(socketClient.getLocalSocketAddress()));
+            dos.writeUTF("127.0.0.1"); ///*String.valueOf(socketClient.getLocalSocketAddress()*/));
             dos.writeUTF("Hello");
 
             dos.flush();

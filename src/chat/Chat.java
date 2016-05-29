@@ -17,6 +17,7 @@ import java.util.logging.Logger;
  * @author Igor Gayvan
  */
 public class Chat {
+
     private static final String SERVER_ADDRESS = "127.0.0.1";
     private static final int SERVER_PORT = 5782;
 
@@ -37,8 +38,7 @@ public class Chat {
         }
 
         // создаем клиента для сервера
-        ChatClient chatClient = null;
-        chatClient = new ChatClient(SERVER_ADDRESS,SERVER_PORT);
+        ChatClient chatClient =  new ChatClient(SERVER_ADDRESS, SERVER_PORT);
         Thread thread = new Thread(chatClient);
         thread.start();
 

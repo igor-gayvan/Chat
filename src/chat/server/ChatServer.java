@@ -40,7 +40,7 @@ public class ChatServer implements Runnable {
         while (listen) {
             try (Socket accept = serverSocket.accept()) {
                 // CONFIG SOCKET
-                accept.setSoLinger(true, SERVER_TIMEOUT/2); // Waiting before close connection
+                accept.setSoLinger(true, SERVER_TIMEOUT / 2); // Waiting before close connection
                 accept.setSoTimeout(SERVER_TIMEOUT); // Waiting before throws SocketTimeoutException when read data.
 
                 // Print connected ip address.
@@ -51,7 +51,7 @@ public class ChatServer implements Runnable {
                 DataInputStream dis = new DataInputStream(accept.getInputStream());
                 DataOutputStream dos = new DataOutputStream(accept.getOutputStream());
 
-                commandHandler(clientAddress, dis, dos);
+                commandHandler(clientAddress, dis, dos, accept.getPort());
             } catch (SocketTimeoutException ex) {
                 // NOOP
             } catch (IOException ex) {
@@ -67,7 +67,7 @@ public class ChatServer implements Runnable {
      * @param dos output stream.
      * @throws IOException
      */
-    public void commandHandler(String address, DataInputStream dis, DataOutputStream dos) throws IOException {
+    public void commandHandler(String address, DataInputStream dis, DataOutputStream dos, int clientPort) throws IOException {
         // WORKING WITH SOCKET
         String command = dis.readUTF();
         System.out.println("COMMAND: " + command);
@@ -77,7 +77,7 @@ public class ChatServer implements Runnable {
                 pingHandler(dos);
                 break;
             case "MSG":
-                messageHandler(address, dis, dos);
+                messageHandler(address, dis, dos, clientPort);
                 break;
             default:
                 defaultHandler(dos);
@@ -90,31 +90,31 @@ public class ChatServer implements Runnable {
         dos.flush();
     }
 
-    public void messageHandler(String sender, DataInputStream dis, DataOutputStream dos) throws IOException {
+    public void messageHandler(String sender, DataInputStream dis, DataOutputStream dos, int clientPort) throws IOException {
         String recipient = dis.readUTF();
         String message = dis.readUTF();
 
         System.out.printf("  Address: %s\n  Message: %s\n", recipient, message);
-        
-        boolean success = false;
 
-        try (Socket client = new Socket(recipient, 5781)) {
-            DataOutputStream client_dos = new DataOutputStream(client.getOutputStream());
-            DataInputStream client_dis = new DataInputStream(client.getInputStream());
+        boolean success = true;
 
-            client_dos.writeUTF("MSG");
-            client_dos.flush();
-            client_dos.writeUTF(sender);
-            client_dos.flush();
-            client_dos.writeUTF(message);
-            client_dos.flush();
-            
-            String response = client_dis.readUTF();
-            
-            if ("OK".equals(response)) {
-                success = true;
-            }
-        }
+//        try (Socket client = new Socket(recipient, 5782)) {
+//            DataOutputStream client_dos = new DataOutputStream(client.getOutputStream());
+//            DataInputStream client_dis = new DataInputStream(client.getInputStream());
+//
+//            client_dos.writeUTF("MSG");
+//            client_dos.flush();
+//            client_dos.writeUTF(sender);
+//            client_dos.flush();
+//            client_dos.writeUTF(message);
+//            client_dos.flush();
+//
+//            String response = client_dis.readUTF();
+//
+//            if ("OK".equals(response)) {
+//                success = true;
+//            }
+//        }
 
         dos.writeUTF(success ? "OK" : "ERROR:While sending message.");
         dos.flush();
