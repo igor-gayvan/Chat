@@ -6,7 +6,6 @@
 package chat;
 
 import chat.server.ChatServer;
-import chat.client.ChatClient;
 import java.io.IOException;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -18,7 +17,7 @@ import java.util.logging.Logger;
  */
 public class Main {
 
-    private static final String SERVER_ADDRESS = "192.168.1.99";
+    private static final String SERVER_ADDRESS = "localhost";
     private static final int SERVER_PORT = 5781;
     private static final int CLIENT_SERVER_PORT = 5782;
 
@@ -58,13 +57,13 @@ public class Main {
                         case "1":
                         case "s":
                             System.out.print("Enter recepient address 192.168.1.");
-                            String recepient = "192.168.1.".concat(scanner.nextLine());
+                            String recepient = "localhost" /*192.168.1.".concat(scanner.nextLine())*/;
                             System.out.print("Enter message: ");
                             String message = scanner.nextLine();
                             
                             // создаем клиента для сервера
-                            ChatClient chatClient = new ChatClient(SERVER_ADDRESS, SERVER_PORT);
-                            chatClient.sendMessage(recepient, message);
+//                            ChatClient chatClient = new ChatClient(SERVER_ADDRESS, SERVER_PORT);
+//                            chatClient.sendMessage(recepient, message);
                             break;
                         default:
                             System.out.println("UNKNOWN ACTION");

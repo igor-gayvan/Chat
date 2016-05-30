@@ -27,7 +27,7 @@ public class ChatClient {
         this.serverPort = serverPort;
     }
 
-    public void sendMessage(String recepient, String message) {
+    public void sendMessage(String recepient, String message) throws IOException {
         try (Socket socketClient = new Socket()) {
 
             socketClient.setSoTimeout(1000);
@@ -54,9 +54,7 @@ public class ChatClient {
             } else {
                 System.out.println("Error while sending message");
             }
-        } catch (IOException ex) {
-            Logger.getLogger(ChatClient.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        } 
     }
 
 }
