@@ -8,6 +8,8 @@ package chat;
 import chat.client.ChatClient;
 import chat.server.ChatServer;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -16,11 +18,7 @@ import java.util.logging.Logger;
  * @author Igor Gayvan
  */
 public class ChatFrame extends javax.swing.JFrame {
-    
-    private static final String SERVER_ADDRESS = "localhost";
-    private static final int SERVER_PORT = 5781;
-    private static final int CLIENT_SERVER_PORT = 5782;
-    
+
     private ChatServer chatServer;
 
     /**
@@ -28,19 +26,20 @@ public class ChatFrame extends javax.swing.JFrame {
      */
     public ChatFrame() {
         initComponents();
-        
-        ChatServer chatServer = null;
+
+        chatServer = null;
         try {
-            chatServer = new ChatServer(CLIENT_SERVER_PORT);
+            chatServer = new ChatServer(Const.CLIENT_SERVER_PORT);
             Thread thread = new Thread(chatServer);
-            
+
             thread.start();
-            
+
         } catch (IOException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         jlStatusMessage.setText("");
+        setLocationRelativeTo(null);
     }
 
     /**
@@ -64,14 +63,12 @@ public class ChatFrame extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(600, 400));
 
-        jtaChatHistory.setEditable(false);
         jtaChatHistory.setColumns(20);
-        jtaChatHistory.setForeground(java.awt.SystemColor.info);
         jtaChatHistory.setRows(14);
         jtaChatHistory.setFocusable(false);
         jScrollPane1.setViewportView(jtaChatHistory);
 
-        jtfRecepient.setText("192.168.1.");
+        jtfRecepient.setText("127.0.0.1");
         jtfRecepient.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jtfRecepientActionPerformed(evt);
@@ -138,17 +135,24 @@ public class ChatFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jtfRecepientActionPerformed
 
     private void jtbSendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtbSendActionPerformed
-        ChatClient chatClient = new ChatClient(SERVER_ADDRESS, SERVER_PORT);
-        
-        String recepient = jtfRecepient.getText();
-        String message = jtaChatMessage.getText();
-        
+        ChatClient chatClient = new ChatClient(Const.SERVER_ADDRESS, Const.SERVER_PORT);
+
+        String recepient = jtfRecepient.getText().trim();
+        String message = jtaChatMessage.getText().trim();
+
         if (message.isEmpty()) {
             jlStatusMessage.setText("Enter message");
             return;
         }
         try {
             chatClient.sendMessage(recepient, message);
+
+            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+
+            jtaChatHistory.append(sdf.format(new Date()) + " You: " + message + "\n");
+            jtaChatMessage.requestFocus();
+
+            jtaChatMessage.setText("");
         } catch (IOException ex) {
             jlStatusMessage.setText(ex.getMessage());
         }

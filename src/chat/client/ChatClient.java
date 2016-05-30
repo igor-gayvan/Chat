@@ -28,7 +28,7 @@ public class ChatClient {
     }
 
     public void sendMessage(String recepient, String message) throws IOException {
-        try (Socket socketClient = new Socket()) {
+        try (Socket socketClient = new Socket();) {
 
             socketClient.setSoTimeout(1000);
             System.out.println("Connecting...");

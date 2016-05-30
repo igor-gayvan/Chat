@@ -78,11 +78,7 @@
       <SubComponents>
         <Component class="javax.swing.JTextArea" name="jtaChatHistory">
           <Properties>
-            <Property name="editable" type="boolean" value="false"/>
             <Property name="columns" type="int" value="20"/>
-            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="e1" green="ff" id="Info" palette="2" red="ff" type="palette"/>
-            </Property>
             <Property name="rows" type="int" value="14"/>
             <Property name="focusable" type="boolean" value="false"/>
           </Properties>
@@ -91,7 +87,7 @@
     </Container>
     <Component class="javax.swing.JTextField" name="jtfRecepient">
       <Properties>
-        <Property name="text" type="java.lang.String" value="192.168.1."/>
+        <Property name="text" type="java.lang.String" value="127.0.0.1"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jtfRecepientActionPerformed"/>

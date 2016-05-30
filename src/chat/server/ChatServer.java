@@ -5,6 +5,7 @@
  */
 package chat.server;
 
+import chat.Const;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -20,8 +21,6 @@ import java.util.logging.Logger;
  */
 public class ChatServer implements Runnable {
 
-    private static final int SERVER_TIMEOUT = 1000;
-
     private int port;
     private ServerSocket serverSocket;
     private boolean listen;
@@ -29,19 +28,20 @@ public class ChatServer implements Runnable {
     public ChatServer(int port) throws IOException {
         this.port = port;
         this.serverSocket = new ServerSocket(port);
-        this.serverSocket.setSoTimeout(SERVER_TIMEOUT);
+        this.serverSocket.setSoTimeout(Const.SERVER_TIMEOUT);
     }
 
     @Override
     public void run() {
         listen = true;
 
+//        jtaChatHistory.
         System.out.println("SERVER LISTEN ON " + port);
         while (listen) {
             try (Socket accept = serverSocket.accept()) {
                 // CONFIG SOCKET
-                accept.setSoLinger(true, SERVER_TIMEOUT / 2); // Waiting before close connection
-                accept.setSoTimeout(SERVER_TIMEOUT); // Waiting before throws SocketTimeoutException when read data.
+                accept.setSoLinger(true, Const.SERVER_TIMEOUT / 2); // Waiting before close connection
+                accept.setSoTimeout(Const.SERVER_TIMEOUT); // Waiting before throws SocketTimeoutException when read data.
 
                 // Print connected ip address.
                 String clientAddress = accept.getInetAddress().getHostAddress();
@@ -115,7 +115,6 @@ public class ChatServer implements Runnable {
 //                success = true;
 //            }
 //        }
-
         dos.writeUTF(success ? "OK" : "ERROR:While sending message.");
         dos.flush();
     }

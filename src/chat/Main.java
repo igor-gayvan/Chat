@@ -17,7 +17,7 @@ import java.util.logging.Logger;
  */
 public class Main {
 
-    private static final String SERVER_ADDRESS = "localhost";
+    private static final String SERVER_ADDRESS = "127.0.0.1";
     private static final int SERVER_PORT = 5781;
     private static final int CLIENT_SERVER_PORT = 5782;
 
@@ -57,7 +57,7 @@ public class Main {
                         case "1":
                         case "s":
                             System.out.print("Enter recepient address 192.168.1.");
-                            String recepient = "localhost" /*192.168.1.".concat(scanner.nextLine())*/;
+                            String recepient = "127.0.0.1" /*192.168.1.".concat(scanner.nextLine())*/;
                             System.out.print("Enter message: ");
                             String message = scanner.nextLine();
                             
