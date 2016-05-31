@@ -147,7 +147,7 @@ public class ChatFrame extends javax.swing.JFrame {
         try {
             chatClient.sendMessage(recepient, message);
 
-            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+            SimpleDateFormat sdf = new SimpleDateFormat(Const.FORMAT_DATE);
 
             jtaChatHistory.append(sdf.format(new Date()) + " You: " + message + "\n");
             jtaChatMessage.requestFocus();
